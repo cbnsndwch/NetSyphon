@@ -55,7 +55,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Commands\Contracts\ICommand.cs" />
+    <Compile Include="Commands\Implementations\RunJobCommand.cs" />
     <Compile Include="Cli\Entry.cs" />
+    <Compile Include="Models\RunJobModel.cs" />
     <Compile Include="Config\JobDescription.cs" />
     <Compile Include="Config\JobSection.cs" />
     <Compile Include="Cli\GenerateConfigFileCliArgs.cs" />
