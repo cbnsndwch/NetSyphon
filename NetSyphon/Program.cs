@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using NetSyphon.Cli;
 using NetSyphon.Commands.Contracts;
 using NetSyphon.Commands.Implementations;
@@ -17,8 +18,8 @@ namespace NetSyphon
                 // register available commands
                 RegisterCommands();
 
-                args = new[] { "-h" };
-                //args = new[] { "job", "D:\\test.json" };
+                //args = new[] { "-h" };
+                args = new[] { "job", "D:\\test.json" };
                 //args = new[] { "new", "D:\\test.json", "D:\\out.json" };
 
                 Args.InvokeAction<Entry>(args);
@@ -26,12 +27,26 @@ namespace NetSyphon
             catch (Exception e)
             {
                 Console.WriteLine($"Exception ocurred: {e.Message}");
-                Console.WriteLine($"StackTrace: {e.StackTrace}");
+                if (e is AggregateException)
+                {
+                    var level = 0;
+                    while (e.InnerException != null)
+                    {
+                        var inner = e.InnerException;
+                        Console.WriteLine($"Inner Exception {++level} message: {inner.Message}");
+                    }
+                }
+
+                //Console.WriteLine($"StackTrace: {e.StackTrace}");
             }
 
 #if DEBUG
-            // keep the Console window open if in Debug mode
-            Console.ReadLine();
+
+            if (Debugger.IsAttached)
+            {
+                // keep the Console window open if in Debug mode and the debugger is attached
+                Console.ReadLine();
+            }
 #endif
         }
 

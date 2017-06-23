@@ -33,7 +33,7 @@ namespace NetSyphon.Cli
             Console.WriteLine($"Config file is: {cliArgs.ConfigFile}");
 
             if (!File.Exists(cliArgs.ConfigFile))
-                throw new ArgException($"The specified Job Cofiguration [{cliArgs.ConfigFile}] file does not exist.");
+                throw new ArgException($"The specified Job Cofiguration file [{cliArgs.ConfigFile}] does not exist.");
 
             JobDescription model;
             try
