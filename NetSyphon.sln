@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetSyphon.Relational.SqlSer
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetSyphon.Relational.MySql", "Relational\NetSyphon.Relational.MySql\NetSyphon.Relational.MySql.csproj", "{A77664A1-13B4-44BA-9F5D-86E7A92D0D43}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetSyphon.Relational.PostgreSql", "Relational\NetSyphon.Relational.PostgreSql\NetSyphon.Relational.PostgreSql.csproj", "{996E93F0-048A-4998-8784-4C5ED932061A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -35,6 +37,10 @@ Global
 		{A77664A1-13B4-44BA-9F5D-86E7A92D0D43}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A77664A1-13B4-44BA-9F5D-86E7A92D0D43}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A77664A1-13B4-44BA-9F5D-86E7A92D0D43}.Release|Any CPU.Build.0 = Release|Any CPU
+		{996E93F0-048A-4998-8784-4C5ED932061A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{996E93F0-048A-4998-8784-4C5ED932061A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{996E93F0-048A-4998-8784-4C5ED932061A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{996E93F0-048A-4998-8784-4C5ED932061A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -43,5 +49,6 @@ Global
 		{19375E75-259C-4A33-8B3F-F6EC53AA803C} = {0866CEEF-02AC-479D-8BB8-D8E7FB99159C}
 		{5E8099FA-FC68-475C-B987-380E1CC92E6E} = {0866CEEF-02AC-479D-8BB8-D8E7FB99159C}
 		{A77664A1-13B4-44BA-9F5D-86E7A92D0D43} = {0866CEEF-02AC-479D-8BB8-D8E7FB99159C}
+		{996E93F0-048A-4998-8784-4C5ED932061A} = {0866CEEF-02AC-479D-8BB8-D8E7FB99159C}
 	EndGlobalSection
 EndGlobal
