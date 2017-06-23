@@ -9,7 +9,13 @@ namespace NetSyphon
         {
             try
             {
-                Args.InvokeMain<Entry>(args);
+                args = new[] { "-h" };
+                //args = new[] { "job", "D:\\test.json" };
+                //args = new[] { "new", "D:\\test.json", "D:\\out.json" };
+
+                Args.InvokeAction<Entry>(args);
+
+                Console.ReadLine();
             }
             catch (Exception e)
             {

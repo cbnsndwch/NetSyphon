@@ -54,10 +54,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Domain\Entry.cs" />
+    <Compile Include="Entry.cs" />
     <Compile Include="Config\JobDescription.cs" />
     <Compile Include="Config\JobSection.cs" />
-    <Compile Include="Entry.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
