@@ -57,6 +57,7 @@
     <Compile Include="Commands\Contracts\ICommand.cs" />
     <Compile Include="Commands\Implementations\RunJobCommand.cs" />
     <Compile Include="Cli\Entry.cs" />
+    <Compile Include="IoC\ServiceLocator.cs" />
     <Compile Include="Models\JobDescription.cs" />
     <Compile Include="Models\JobSection.cs" />
     <Compile Include="Cli\GenerateConfigFileCliArgs.cs" />
