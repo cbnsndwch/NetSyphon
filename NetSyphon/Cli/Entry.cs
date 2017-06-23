@@ -1,9 +1,8 @@
 ﻿using System;
 using log4net;
-using log4net.Core;
 using PowerArgs;
 
-namespace NetSyphon
+namespace NetSyphon.Cli
 {
     public class Entry
     {

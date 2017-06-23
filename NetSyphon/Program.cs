@@ -1,4 +1,5 @@
 ﻿using System;
+using NetSyphon.Cli;
 using PowerArgs;
 
 namespace NetSyphon

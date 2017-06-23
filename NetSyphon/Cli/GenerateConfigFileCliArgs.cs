@@ -1,6 +1,6 @@
 using PowerArgs;
 
-namespace NetSyphon
+namespace NetSyphon.Cli
 {
     /// <summary>
     /// Wraps the CLI arguments for the GenerateConfigFile action
