@@ -122,12 +122,12 @@ namespace NetSyphon.Relational.Shared
         /// <summary>
         /// Gets or sets the name of the table this dynamicmodel is represented by.
         /// </summary>
-        public virtual string TableName { get; set; }
+        public string TableName { get; set; }
 
         /// <summary>
         /// Gets or sets the primary key field. If empty, "ID" is used.
         /// </summary>
-        public virtual string PrimaryKeyField { get; set; }
+        public string PrimaryKeyField { get; set; }
 
         /// <summary>
         /// Gets or sets the descriptor field name, which is useful if the table is a lookup table. Descriptor field is the field containing the textual representation of the value
@@ -138,7 +138,7 @@ namespace NetSyphon.Relational.Shared
         /// <summary>
         /// Contains the error messages collected since the last Validate.
         /// </summary>
-        public IList<string> Errors { get; protected set; }
+        public IList<string> Errors { get; protected set; } = new List<string>();
 
         /// <summary>
         /// Gets or sets the connection string used. By default, it's read from the config file. If no config file can be used, set the connection string using this property prior to 
@@ -170,36 +170,45 @@ namespace NetSyphon.Relational.Shared
         /// </summary>
         /// <param name="connectionStringName">Name of the connection string to load from the config file.</param>
         /// <param name="tableName">Name of the table to read the meta data for. Can be left empty, in which case the name of this type is used.</param>
-        /// <param name="primaryKeyField">The primary key field. Can be left empty, in which case 'ID' is used.</param>
+        /// <param name="pkField">The primary key field. Can be left empty, in which case 'ID' is used.</param>
         /// <param name="descriptorField">The descriptor field, if the table is a lookup table. Descriptor field is the field containing the textual representation of the value
         /// in primaryKeyField.</param>
-        /// <param name="primaryKeyFieldSequence">The primary key sequence to use. Specify the empty string if the PK isn't sequenced/identity. Is initialized by default with
+        /// <param name="pkFieldSequence">The primary key sequence to use. Specify the empty string if the PK isn't sequenced/identity. Is initialized by default with
         /// the name specified in the constant DynamicModel.DefaultSequenceName.</param>
         /// <param name="connectionStringProvider">The connection string provider to use. By default this is empty and the default provider is used which will read values from 
         /// the application's config file.</param>
-        public DynamicModel(string connectionStringName, string tableName = "", string primaryKeyField = "", string descriptorField = "",
-            string primaryKeyFieldSequence = "", IConnectionStringProvider connectionStringProvider = null)
+        protected DynamicModel(string connectionStringName, IConnectionStringProvider connectionStringProvider, string tableName, string pkField = "Id", string descriptorField = "", string pkFieldSequence = "")
         {
-            this.TableName = string.IsNullOrWhiteSpace(tableName) ? this.GetType().Name : tableName;
-            ProcessTableName();
-            this.PrimaryKeyField = string.IsNullOrWhiteSpace(primaryKeyField) ? "ID" : primaryKeyField;
-            PrimaryKeyFieldSequence = primaryKeyFieldSequence == "" ? ConfigurationManager.AppSettings["default_seq"] : primaryKeyFieldSequence;
-            this.DescriptorField = descriptorField;
-            this.Errors = new List<string>();
+            // set the table name
+            TableName = tableName;
 
+            // hadle Schema Name in Table Name
+            ProcessTableName();
+
+            // set the Primary Key name
+            PrimaryKeyField = pkField;
+
+            // set the PK generation source
+            PrimaryKeyFieldSequence = pkFieldSequence == "" ? ConfigurationManager.AppSettings["default_seq"] : pkFieldSequence;
+
+            // set the Descriptor Field name, if any
+            this.DescriptorField = descriptorField;
+
+            // ensure a connection string provider service is available
             if (connectionStringProvider == null)
-            {
-                connectionStringProvider = new ConfigurationBasedConnectionStringProvider();
-            }
+                throw new ArgumentException("ConnectionString provider cannot be null", nameof(connectionStringProvider));
+
+            // get the DBProvider name from the ConnectionString
             var providerName = connectionStringProvider.GetProviderName(connectionStringName);
             if (string.IsNullOrWhiteSpace(providerName))
-            {
-                providerName = this.DbProviderFactoryName;
-            }
+                throw new ArgumentException("Specified ConnectionString does not specify a ProviderName", nameof(connectionStringName));
+
+            // get and instance of the DbProvider Factory from the registered Factories
             Factory = DbProviderFactories.GetFactory(providerName);
+
+            // finally, set the ConnectionString for later use
             ConnectionString = connectionStringProvider.GetConnectionString(connectionStringName);
         }
-
 
         #endregion
 
@@ -844,7 +853,7 @@ namespace NetSyphon.Relational.Shared
         /// </summary>
         /// <param name="rawWhereClause">The raw where clause.</param>
         /// <returns>processed rawWhereClause which will guaranteed contain " WHERE" including prefix space.</returns>
-        private string ReadifyWhereClause(string rawWhereClause)
+        protected string ReadifyWhereClause(string rawWhereClause)
         {
             return ReadifyClause(rawWhereClause, "WHERE");
         }
@@ -910,7 +919,7 @@ namespace NetSyphon.Relational.Shared
         }
 
         /// <summary>
-        /// Add single parameter to DbCommand. 
+        /// When implmented in a child class, adds a single parameter to a DbCommand, possibly in a DB-specific SQL idiom.
         /// </summary>
         /// <param name="cmd">The command to add the parameter to.</param>
         /// <param name="value">The value to add as a parameter to the command.</param>

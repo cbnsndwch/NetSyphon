@@ -9,6 +9,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Relational", "Relational", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetSyphon.Relational.Shared", "Relational\NetSyphon.Relational.Shared\NetSyphon.Relational.Shared.csproj", "{19375E75-259C-4A33-8B3F-F6EC53AA803C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetSyphon.Relational.SqlServer", "Relational\NetSyphon.Relational.SqlServer\NetSyphon.Relational.SqlServer.csproj", "{5E8099FA-FC68-475C-B987-380E1CC92E6E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -23,11 +25,16 @@ Global
 		{19375E75-259C-4A33-8B3F-F6EC53AA803C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{19375E75-259C-4A33-8B3F-F6EC53AA803C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{19375E75-259C-4A33-8B3F-F6EC53AA803C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5E8099FA-FC68-475C-B987-380E1CC92E6E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5E8099FA-FC68-475C-B987-380E1CC92E6E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5E8099FA-FC68-475C-B987-380E1CC92E6E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5E8099FA-FC68-475C-B987-380E1CC92E6E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{19375E75-259C-4A33-8B3F-F6EC53AA803C} = {0866CEEF-02AC-479D-8BB8-D8E7FB99159C}
+		{5E8099FA-FC68-475C-B987-380E1CC92E6E} = {0866CEEF-02AC-479D-8BB8-D8E7FB99159C}
 	EndGlobalSection
 EndGlobal
