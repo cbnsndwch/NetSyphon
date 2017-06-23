@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using NetSyphon.Commands.Contracts;
 using NetSyphon.Models;
 
@@ -10,7 +11,7 @@ namespace NetSyphon.Commands.Implementations
     public class RunJobCommand : ICommand<JobDescription>
     {
         /// <summary>
-        /// The entry point to the command
+        /// The entry point to the command for synchronous execution
         /// </summary>
         /// <param name="model">An instance of <see cref="JobDescription"/> describing the ETL job</param>
         public void Execute(JobDescription model)
@@ -20,6 +21,15 @@ namespace NetSyphon.Commands.Implementations
 
 
 
+        }
+
+        /// <summary>
+        /// The entry point to the command for asynchronous execution
+        /// </summary>
+        /// <param name="model">An instance of <see cref="JobDescription"/> describing the ETL job</param>
+        public Task ExecuteAsync(JobDescription model)
+        {
+            throw new NotImplementedException();
         }
     }
 }
