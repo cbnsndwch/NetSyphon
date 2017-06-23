@@ -12,7 +12,7 @@ namespace NetSyphon.Cli
 
         #endregion
 
-        #region Options
+        #region Global Options
 
         [HelpHook, ArgShortcut("h"), ArgDescription("Displays this help information")]
         public bool Help { get; set; }

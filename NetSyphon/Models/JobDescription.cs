@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
-namespace NetSyphon.Config
+namespace NetSyphon.Models
 {
+    /// <summary>
+    /// Describes an ETL job to extract data from various sources, transform it and load it into a MongoDB server
+    /// </summary>
     public class JobDescription
     {
         #region SQL Options
@@ -31,7 +30,7 @@ namespace NetSyphon.Config
 
         #endregion
 
-        #region Job Description
+        #region Job Sections
 
         /// <summary>
         /// The name of the section to use as an entry point to the Job

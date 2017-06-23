@@ -57,9 +57,8 @@
     <Compile Include="Commands\Contracts\ICommand.cs" />
     <Compile Include="Commands\Implementations\RunJobCommand.cs" />
     <Compile Include="Cli\Entry.cs" />
-    <Compile Include="Models\RunJobModel.cs" />
-    <Compile Include="Config\JobDescription.cs" />
-    <Compile Include="Config\JobSection.cs" />
+    <Compile Include="Models\JobDescription.cs" />
+    <Compile Include="Models\JobSection.cs" />
     <Compile Include="Cli\GenerateConfigFileCliArgs.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -69,5 +68,6 @@
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
