@@ -1,8 +1,8 @@
 ﻿using PowerArgs;
 
-namespace NetSyphon.Domain
+namespace NetSyphon
 {
-    public class Program
+    public class Entry
     {
         [HelpHook, ArgShortcut("h"), ArgDescription("Displays this help information")]
         public bool Help { get; set; }

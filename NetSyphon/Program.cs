@@ -1,16 +1,15 @@
 ﻿using System;
-using NetSyphon.Domain;
 using PowerArgs;
 
 namespace NetSyphon
 {
-    internal class Entry
+    internal class Program
     {
         private static void Main(string[] args)
         {
             try
             {
-                Args.InvokeMain<Program>(args);
+                Args.InvokeMain<Entry>(args);
             }
             catch (Exception e)
             {

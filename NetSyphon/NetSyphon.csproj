@@ -32,7 +32,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <StartupObject>NetSyphon.Entry</StartupObject>
+    <StartupObject>NetSyphon.Program</StartupObject>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="log4net">
@@ -54,7 +54,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Domain\Program.cs" />
+    <Compile Include="Domain\Entry.cs" />
     <Compile Include="Config\JobDescription.cs" />
     <Compile Include="Config\JobSection.cs" />
     <Compile Include="Entry.cs" />
