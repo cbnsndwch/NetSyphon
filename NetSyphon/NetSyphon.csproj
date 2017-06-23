@@ -54,6 +54,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Commands\Contracts\ICommand.cs" />
     <Compile Include="Cli\Entry.cs" />
     <Compile Include="Config\JobDescription.cs" />
     <Compile Include="Config\JobSection.cs" />
