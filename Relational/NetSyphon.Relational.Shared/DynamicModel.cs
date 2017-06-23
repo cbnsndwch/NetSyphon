@@ -866,7 +866,7 @@ namespace NetSyphon.Relational.Shared
         /// <returns>
         /// processed rawOrderByClause which will guaranteed contain " ORDER BY" including prefix space.
         /// </returns>
-        private string ReadifyOrderByClause(string rawOrderByClause)
+        protected string ReadifyOrderByClause(string rawOrderByClause)
         {
             return ReadifyClause(rawOrderByClause, "ORDER BY");
         }

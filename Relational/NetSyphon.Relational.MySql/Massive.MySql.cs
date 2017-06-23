@@ -1,9 +1,9 @@
 ﻿///////////////////////////////////////////////////////////////////////////////////////////////////
-// Massive v2.0. SQL Server specific code
+// Massive v2.0. MySQL specific code
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // Licensed to you under the New BSD License
 // http://www.opensource.org/licenses/bsd-license.php
-// Massive is copyright (c) 2009-2016 various contributors.
+// Massive is copyright (c) 2009-2017 various contributors.
 // All rights reserved.
 // See for sourcecode, full history and contributors list: https://github.com/FransBouma/Massive
 //
@@ -29,17 +29,18 @@
 
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.Common;
 using System.Dynamic;
 using System.Linq;
 using NetSyphon.Relational.Shared;
 
-namespace NetSyphon.Relational.SqlServer
+namespace NetSyphon.Relational.MySql
 {
     /// <summary>
     /// A class that wraps your database table in Dynamic Funtime
     /// </summary>
-    public class SqlServerDynamicModel : DynamicModel
+    public class MySqlDynamicModel : DynamicModel
     {
         #region Constants
 
@@ -47,8 +48,7 @@ namespace NetSyphon.Relational.SqlServer
         /// <summary>
         /// The default sequence name for initializing the pk sequence name value in the ctor. 
         /// </summary>
-        protected override string DefaultSequenceName => "SCOPE_IDENTITY()";
-
+        protected override string DefaultSequenceName => "LAST_INSERT_ID()";
         /// <summary>
         /// Flag to signal whether the sequence retrieval call (if any) is executed before the insert query (true) or after (false). Not a const, to avoid warnings. 
         /// </summary>
@@ -61,7 +61,7 @@ namespace NetSyphon.Relational.SqlServer
         /// <summary>
         /// Provides the default DbProviderFactoryName to the core to create a factory on the fly in generic code.
         /// </summary>
-        protected override string DbProviderFactoryName => "System.Data.SqlClient";
+        protected override string DbProviderFactoryName => "MySql.Data.MySqlClient";
 
         /// <summary>
         /// Gets the table schema query to use to obtain meta-data for a given table and schema
@@ -77,8 +77,7 @@ namespace NetSyphon.Relational.SqlServer
 
         #region Constructor
 
-        public SqlServerDynamicModel(string connectionStringName, IConnectionStringProvider connectionStringProvider, string tableName, string pkField = "Id", string descriptorField = "", string pkFieldSequence = "")
-            : base(connectionStringName, connectionStringProvider, tableName, pkField, descriptorField, pkFieldSequence) { }
+        public MySqlDynamicModel(string connectionStringName, IConnectionStringProvider connectionStringProvider, string tableName, string pkField = "Id", string descriptorField = "", string pkFieldSequence = "") : base(connectionStringName, connectionStringProvider, tableName, pkField, descriptorField, pkFieldSequence) { }
 
         #endregion
 
@@ -99,17 +98,25 @@ namespace NetSyphon.Relational.SqlServer
             }
             else
             {
-                var o = value as ExpandoObject;
-                if (o == null)
+                if (value is Guid)
                 {
-                    p.Value = value;
-                    var s = value as string;
-                    if (s != null)
-                        p.Size = s.Length > 4000 ? -1 : 4000;
+                    p.Value = value.ToString();
+                    p.DbType = DbType.String;
+                    p.Size = 36;
+                }
+                else if (value is ExpandoObject)
+                {
+                    var d = (IDictionary<string, object>)value;
+                    p.Value = d.Values.FirstOrDefault();
                 }
                 else
                 {
-                    p.Value = ((IDictionary<string, object>)value).Values.FirstOrDefault();
+                    p.Value = value;
+                }
+                var valueAsString = value as string;
+                if (valueAsString != null)
+                {
+                    p.Size = valueAsString.Length > 4000 ? -1 : 4000;
                 }
             }
             cmd.Parameters.Add(p);
@@ -127,22 +134,17 @@ namespace NetSyphon.Relational.SqlServer
             {
                 return null;
             }
-            dynamic result;
-            switch (defaultValue)
+
+            dynamic result = null;
+            switch (defaultValue.ToUpper())
             {
-                case "getdate()":
-                case "(getdate())":
+                case "CURRENT_TIMESTAMP":
                     result = DateTime.Now;
-                    break;
-                case "newid()":
-                    result = Guid.NewGuid().ToString();
-                    break;
-                default:
-                    result = defaultValue.Replace("(", "").Replace(")", "");
                     break;
             }
             return result;
         }
+
 
         /// <summary>
         /// Gets the aggregate function to use in a scalar query for the fragment specified
@@ -166,14 +168,18 @@ namespace NetSyphon.Relational.SqlServer
             }
         }
 
+
         /// <summary>
         /// Gets the sql statement to use for obtaining the identity value of the last insert.
         /// </summary>
         /// <returns></returns>
         protected override string GetIdentityRetrievalScalarStatement()
         {
-            return string.IsNullOrEmpty(PrimaryKeyFieldSequence) ? string.Empty : $"SELECT {PrimaryKeyFieldSequence} as newID";
+            return string.IsNullOrEmpty(PrimaryKeyFieldSequence)
+                ? string.Empty
+                : $"SELECT {PrimaryKeyFieldSequence} as newID";
         }
+
 
         /// <summary>
         /// Gets the sql statement pattern for a count row query (count(*)). The pattern should include as place holders: {0} for source (FROM clause).
@@ -184,6 +190,7 @@ namespace NetSyphon.Relational.SqlServer
             return "SELECT COUNT(*) FROM {0} ";
         }
 
+
         /// <summary>
         /// Gets the name of the parameter with the prefix to use in a query, e.g. @rawName or :rawName
         /// </summary>
@@ -193,6 +200,7 @@ namespace NetSyphon.Relational.SqlServer
         {
             return "@" + rawName;
         }
+
 
         /// <summary>
         /// Gets the select query pattern, to use for building select queries. The pattern should include as place holders: {0} for project list, {1} for the source (FROM clause).
@@ -205,8 +213,9 @@ namespace NetSyphon.Relational.SqlServer
         /// </returns>
         protected override string GetSelectQueryPattern(int limit, string whereClause, string orderByClause)
         {
-            return $"SELECT{(limit > 0 ? " TOP " + limit : string.Empty)} {{0}} FROM {{1}}{whereClause}{orderByClause}";
+            return string.Format("SELECT {{0}} FROM {{1}}{0}{1}{2}", whereClause, orderByClause, limit > 0 ? " LIMIT " + limit : string.Empty);
         }
+
 
         /// <summary>
         /// Gets the insert query pattern, to use for building insert queries. The pattern should include as place holders: {0} for target, {1} for field list, {2} for parameter list
@@ -216,6 +225,7 @@ namespace NetSyphon.Relational.SqlServer
         {
             return "INSERT INTO {0} ({1}) VALUES ({2})";
         }
+
 
         /// <summary>
         /// Gets the update query pattern, to use for building update queries. The pattern should include as placeholders: {0} for target, {1} for field list with sets. Has to have
@@ -227,6 +237,7 @@ namespace NetSyphon.Relational.SqlServer
             return "UPDATE {0} SET {1} ";
         }
 
+
         /// <summary>
         /// Gets the delete query pattern, to use for building delete queries. The pattern should include as placeholders: {0} for the target. Has to have trailing space
         /// </summary>
@@ -235,6 +246,7 @@ namespace NetSyphon.Relational.SqlServer
         {
             return "DELETE FROM {0} ";
         }
+
 
         /// <summary>
         /// Gets the name of the column using the expando object representing the column from the schema
@@ -246,6 +258,7 @@ namespace NetSyphon.Relational.SqlServer
             return columnFromSchema.COLUMN_NAME;
         }
 
+
         /// <summary>
         /// Post-processes the query used to obtain the meta-data for the schema. If no post-processing is required, simply return a toList 
         /// </summary>
@@ -255,6 +268,7 @@ namespace NetSyphon.Relational.SqlServer
         {
             return toPostProcess?.ToList() ?? new List<dynamic>();
         }
+
 
         /// <summary>
         /// Builds a paging query and count query pair. 
@@ -269,31 +283,22 @@ namespace NetSyphon.Relational.SqlServer
         /// <returns>ExpandoObject with two properties: MainQuery for fetching the specified page and CountQuery for determining the total number of rows in the resultset</returns>
         protected override dynamic BuildPagingQueryPair(string sql = "", string primaryKeyField = "", string whereClause = "", string orderByClause = "", string columns = "*", int pageSize = 20, int currentPage = 1)
         {
-            var countSql = string.IsNullOrEmpty(sql)
-                ? $"SELECT COUNT({PrimaryKeyField}) FROM {TableName}"
-                : $"SELECT COUNT({primaryKeyField}) FROM ({sql}) AS PagedTable";
+            var orderByClauseFragment = string.IsNullOrEmpty(orderByClause)
+                ? $" ORDER BY {(string.IsNullOrEmpty(primaryKeyField) ? PrimaryKeyField : primaryKeyField)}"
+                : ReadifyOrderByClause(orderByClause);
 
-            var orderByClauseFragment = orderByClause;
-            if (string.IsNullOrEmpty(orderByClauseFragment))
-                orderByClauseFragment = string.IsNullOrEmpty(primaryKeyField) ? PrimaryKeyField : primaryKeyField;
-
-            var whereClauseFragment = ReadifyWhereClause(whereClause);
-            var query = string.IsNullOrEmpty(sql)
-                ? $"SELECT {columns} FROM (SELECT ROW_NUMBER() OVER (ORDER BY {orderByClauseFragment}) AS Row, {columns} FROM {TableName} {whereClauseFragment}) AS Paged "
-                : $"SELECT {columns} FROM (SELECT ROW_NUMBER() OVER (ORDER BY {orderByClauseFragment}) AS Row, {columns} FROM ({sql}) AS PagedTable {whereClauseFragment}) AS Paged ";
+            var coreQuery = string.Format(GetSelectQueryPattern(0, ReadifyWhereClause(whereClause), orderByClauseFragment), columns, string.IsNullOrEmpty(sql) ? TableName : sql);
 
             var pageStart = (currentPage - 1) * pageSize;
-            query += $" WHERE Row > {pageStart} AND Row <={(pageStart + pageSize)}";
-            countSql += whereClauseFragment;
-
             dynamic toReturn = new ExpandoObject();
-            toReturn.MainQuery = query;
-            toReturn.CountQuery = countSql;
+            toReturn.CountQuery = $"SELECT COUNT(*) FROM ({coreQuery}) q";
+            toReturn.MainQuery = $"{coreQuery} LIMIT {pageSize} OFFSET {pageStart + pageSize}";
 
             return toReturn;
         }
 
         #endregion
+
 
     }
 }
