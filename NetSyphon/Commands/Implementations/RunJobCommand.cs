@@ -1,7 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
+using MongoDB.Bson;
 using NetSyphon.Commands.Contracts;
 using NetSyphon.Models;
+using NetSyphon.Relational.Shared;
+using NetSyphon.Relational.SqlServer;
+using NetSyphon.Services;
 
 namespace NetSyphon.Commands.Implementations
 {
@@ -29,7 +34,7 @@ namespace NetSyphon.Commands.Implementations
         /// <param name="model">An instance of <see cref="JobDescription"/> describing the ETL job</param>
         public Task ExecuteAsync(JobDescription model)
         {
-            throw new NotImplementedException();
+            return Task.Run(() => Execute(model));
         }
     }
 }
