@@ -1,5 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Dynamic;
 using System.Linq;
+using NetSyphon.Models.DocumentTemplates;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
@@ -81,6 +84,12 @@ namespace NetSyphon.Models
         /// All sections that define the Job
         /// </summary>
         public List<JobSection> Sections { get; set; } = new List<JobSection>();
+
+        #endregion
+
+        #region Templates
+
+        public List<IDocumentTemplate> Templates { get; set; }
 
         #endregion
     }

@@ -1,5 +1,7 @@
+using System.Collections.Generic;
 using System.Dynamic;
 using MongoDB.Bson;
+using NetSyphon.Models.DocumentTemplates;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -17,9 +19,14 @@ namespace NetSyphon.Models
         public string Name { get; set; }
 
         /// <summary>
-        /// The template for the output Document. Supports copying fields from the source directly into document fields as well as creating nested objects and arrays.
+        /// The name of the template builder to be used.
         /// </summary>
-        public ExpandoObject Template { get; set; }
+        public string TemplateName { get; set; }
+
+        /// <summary>
+        /// The template data for the output Document. Supports copying fields from the source directly into document fields as well as creating nested objects and arrays.
+        /// </summary>
+        public IDictionary<string, object> TemplateData { get; set; }
 
         /// <summary>
         /// A SQL query describing which data to extract from an RDBMS source

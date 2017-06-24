@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using log4net;
 using MongoDB.Bson;
@@ -75,10 +76,18 @@ namespace NetSyphon.Commands.Implementations
             // Open a cursor to the SQL query
             var data = _documentGenerator.AsEnumerable();
 
+            // Get the template builder from the Job's Templates section
+            var tpl = _jobModel.Templates.FirstOrDefault(t => t.Name == _jobModel.StartSection.TemplateName);
+            if (tpl == null)
+                throw new Exception($"Could not load DocumentTemplate {_jobModel.StartSection.TemplateName}");
+
             var pages = 0;
             _logger.Info($"Starting Job with batch size: {_jobModel.BatchSize}");
-            foreach (var doc in data)
+            foreach (var item in data)
             {
+                // call thge DocumentTemplate build method to map inout-output
+                var doc = tpl.Build(item, _jobModel.StartSection.TemplateData);
+
                 _logger.Info($"Loading document {pages * _jobModel.BatchSize + batch.Count}");
                 batch.Add(new InsertOneModel<dynamic>(doc));
 

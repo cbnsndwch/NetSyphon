@@ -39,7 +39,8 @@ namespace NetSyphon.Cli
             try
             {
                 var jsonText = File.ReadAllText(cliArgs.ConfigFile);
-                model = JsonConvert.DeserializeObject<JobDescription>(jsonText);
+                var settings = new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All };
+                model = JsonConvert.DeserializeObject<JobDescription>(jsonText, settings);
             }
             catch (Exception e)
             {

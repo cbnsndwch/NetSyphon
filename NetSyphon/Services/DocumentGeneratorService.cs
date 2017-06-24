@@ -63,7 +63,7 @@ namespace NetSyphon.Services
                 throw new Exception(msg);
             }
 
-            var template = /*(BsonDocument)*/ section.Template;
+            //var template = /*(BsonDocument)*/ section.Template;
 
 
 
