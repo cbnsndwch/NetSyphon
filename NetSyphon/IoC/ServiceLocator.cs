@@ -8,7 +8,8 @@ using Microsoft.Practices.Unity;
 namespace NetSyphon.IoC
 {
     /// <summary>
-    /// A service registry to support IoC via Service Location
+    /// A service registry to support IoC via Service Location.
+    /// TODO: Add support for other IoC frameworks
     /// </summary>
     public class ServiceLocator
     {

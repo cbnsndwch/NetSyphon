@@ -1,10 +1,14 @@
 ﻿using System;
 using System.Diagnostics;
+using System.IO;
+using MongoDB.Bson;
 using NetSyphon.Cli;
 using NetSyphon.Commands.Contracts;
 using NetSyphon.Commands.Implementations;
 using NetSyphon.IoC;
 using NetSyphon.Models;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using PowerArgs;
 
 namespace NetSyphon
@@ -19,7 +23,7 @@ namespace NetSyphon
                 RegisterCommands();
 
                 //args = new[] { "-h" };
-                args = new[] { "job", "D:\\test.json" };
+                args = new[] { "job", "D:\\out.json" };
                 //args = new[] { "new", "D:\\test.json", "D:\\out.json" };
 
                 Args.InvokeAction<Entry>(args);
@@ -48,6 +52,33 @@ namespace NetSyphon
                 Console.ReadLine();
             }
 #endif
+        }
+
+        private static void Foo()
+        {
+            var fileIn = "D:\\JobDescription.json";
+            var fileOut = "D:\\out.json";
+            var json = File.ReadAllText(fileIn);
+            var x = JsonConvert.DeserializeObject<JobDescription>(json);
+
+            x.Sections.Add(new JobSection
+            {
+                Name = "Producto",
+                Sql = "SELECT * FROM Producto",
+                Template = JsonConvert.DeserializeObject<BsonDocument>(
+                    @"{
+                        ""_id"": ""$Id"",
+                        ""Nombre"": ""$Nombre"",
+                        ""Descripcion"": ""$Descripcion"",
+                        ""CategoriaProducto"": ""@CategoriaProducto"",
+                        ""PrecioUnitario"": ""$PrecioUnitario"",
+                        ""PermitirVenta"": ""$PermitirVenta"",
+                    }")
+            });
+
+            json = JsonConvert.SerializeObject(x, Formatting.Indented);
+            File.WriteAllText(fileOut, json);
+            Environment.Exit(0);
         }
 
         /// <summary>

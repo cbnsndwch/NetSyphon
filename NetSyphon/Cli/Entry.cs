@@ -46,7 +46,7 @@ namespace NetSyphon.Cli
                 throw new AggregateException("An error occurred while loading the Job Configuration file. See InnerException for details", e);
             }
 
-            // TODO: Add JsonSchema validation of the JobDescription
+            // TODO: Add JsonSchema validation of the JobDescription model
 
             // resolve the command
             ICommand<JobDescription> command;
