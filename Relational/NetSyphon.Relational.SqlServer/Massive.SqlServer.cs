@@ -80,6 +80,9 @@ namespace NetSyphon.Relational.SqlServer
         public SqlServerDynamicModel(string connectionStringName, IConnectionStringProvider connectionStringProvider, string tableName, string pkField = "Id", string descriptorField = "", string pkFieldSequence = "")
             : base(connectionStringName, connectionStringProvider, tableName, pkField, descriptorField, pkFieldSequence) { }
 
+        public SqlServerDynamicModel(string connectionString, string tableName, string pkField = "Id", string descriptorField = "", string pkFieldSequence = "")
+            : base(connectionString, tableName, pkField, descriptorField, pkFieldSequence) { }
+
         #endregion
 
         #region DynamicModel members

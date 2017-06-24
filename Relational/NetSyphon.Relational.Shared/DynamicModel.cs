@@ -57,7 +57,7 @@ namespace NetSyphon.Relational.Shared
         /// <summary>
         /// The default sequence name for initializing the pk sequence name value in the ctor. 
         /// </summary>
-        protected abstract string DefaultSequenceName { get; }
+        protected virtual string DefaultSequenceName { get; } = "";
 
         /// <summary>
         /// Flag to signal whether the sequence retrieval call (if any) is executed before the insert query (true) or after (false). Not a const, to avoid warnings. 
@@ -208,6 +208,41 @@ namespace NetSyphon.Relational.Shared
 
             // finally, set the ConnectionString for later use
             ConnectionString = connectionStringProvider.GetConnectionString(connectionStringName);
+        }
+
+        /// <summary>
+        /// Gets or creates a new, empty DynamicModel on the DB pointed to by the Connection String stored under the name specified.
+        /// </summary>
+        /// <param name="connectionString">The connection string to use</param>
+        /// <param name="tableName">Name of the table to read the meta data for. Can be left empty, in which case the name of this type is used.</param>
+        /// <param name="pkField">The primary key field. Can be left empty, in which case 'ID' is used.</param>
+        /// <param name="descriptorField">The descriptor field, if the table is a lookup table. Descriptor field is the field containing the textual representation of the value in primaryKeyField.</param>
+        /// <param name="pkFieldSequence">
+        /// The primary key sequence to use. Specify the empty string if the PK isn't sequenced/identity. Is initialized by default with
+        /// the name specified in the constant DynamicModel.DefaultSequenceName.
+        /// </param>
+        protected DynamicModel(string connectionString, string tableName, string pkField = "Id", string descriptorField = "", string pkFieldSequence = "")
+        {
+            // set the table name
+            TableName = tableName;
+
+            // hadle Schema Name in Table Name
+            ProcessTableName();
+
+            // set the Primary Key name
+            PrimaryKeyField = pkField;
+
+            // set the PK generation source
+            PrimaryKeyFieldSequence = pkFieldSequence == "" ? DefaultSequenceName : pkFieldSequence;
+
+            // set the Descriptor Field name, if any
+            this.DescriptorField = descriptorField;
+
+            // get and instance of the DbProvider Factory from the registered Factories
+            Factory = DbProviderFactories.GetFactory("System.Data.SqlClient");
+
+            // finally, set the ConnectionString for later use
+            ConnectionString = connectionString;
         }
 
         #endregion
