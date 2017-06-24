@@ -1,3 +1,4 @@
+using MongoDB.Bson;
 using Newtonsoft.Json.Linq;
 
 namespace NetSyphon.Models
@@ -15,7 +16,7 @@ namespace NetSyphon.Models
         /// <summary>
         /// The template for the output Document. Supports copying fields from the source directly into document fields as well as creating nested objects and arrays.
         /// </summary>
-        public JObject Template { get; set; }
+        public BsonDocument Template { get; set; }
 
         /// <summary>
         /// A SQL query describing which data to extract from an RDBMS source

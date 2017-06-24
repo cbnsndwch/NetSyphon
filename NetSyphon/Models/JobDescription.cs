@@ -21,6 +21,21 @@ namespace NetSyphon.Models
 
         #endregion
 
+        #region Batching & Threading
+
+        /// <summary>
+        /// The number of items to read from the source before issuing a bulk write command to MongoDB
+        /// </summary>
+        public int BatchSize { get; set; }
+
+        /// <summary>
+        /// The number of threads to run in parallel
+        /// TODO: Figure out the best way to partition source data to allow parallel queries without overlapping
+        /// </summary>
+        public int ThreadCount { get; set; }
+
+        #endregion
+
         #region MongoDB Options
 
         /// <summary>
@@ -28,6 +43,11 @@ namespace NetSyphon.Models
         /// </summary>
         public string MongoConnection { get; set; }
 
+        /// <summary>
+        /// The MongoDB database to connect to
+        /// </summary>
+        public string MongoDatabase { get; set; }
+        
         #endregion
 
         #region Job Sections
@@ -40,7 +60,7 @@ namespace NetSyphon.Models
         /// <summary>
         /// All sections that define the Job
         /// </summary>
-        public List<JobSection> Sections { get; set; }
+        public List<JobSection> Sections { get; set; } = new List<JobSection>();
 
         #endregion
     }
