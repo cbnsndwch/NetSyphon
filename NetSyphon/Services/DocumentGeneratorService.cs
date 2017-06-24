@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,27 +16,28 @@ namespace NetSyphon.Services
         #region Services
 
         private readonly ILog _logger;
-        private readonly DynamicModel _context;
+        private readonly DynamicModel _dbContext;
+        private readonly JobDescription _model;
 
         #endregion
 
         #region Constructor
 
-        public DocumentGeneratorService(ILog logger, DynamicModel context)
+        public DocumentGeneratorService(ILog logger, DynamicModel dbContext, JobDescription model)
         {
             _logger = logger;
-            _context = context;
+            _model = model;
+            _dbContext = dbContext;
+            _dbContext.TableName = _model.StartSection.TableName;
         }
 
         #endregion
 
         #region Public Methods
 
-        public IEnumerable<BsonDocument> Generate(JobDescription model)
+        public IEnumerable<dynamic> AsEnumerable()
         {
-            
-
-            yield break;
+            return _dbContext.Query(_model.StartSection.Sql);
         }
 
         #endregion

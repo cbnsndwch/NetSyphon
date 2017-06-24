@@ -54,32 +54,32 @@ namespace NetSyphon
 #endif
         }
 
-        private static void Foo()
-        {
-            var fileIn = "D:\\JobDescription.json";
-            var fileOut = "D:\\out.json";
-            var json = File.ReadAllText(fileIn);
-            var x = JsonConvert.DeserializeObject<JobDescription>(json);
+        //private static void Foo()
+        //{
+        //    var fileIn = "D:\\JobDescription.json";
+        //    var fileOut = "D:\\out.json";
+        //    var json = File.ReadAllText(fileIn);
+        //    var x = JsonConvert.DeserializeObject<JobDescription>(json);
 
-            x.Sections.Add(new JobSection
-            {
-                Name = "Producto",
-                Sql = "SELECT * FROM Producto",
-                Template = JsonConvert.DeserializeObject<BsonDocument>(
-                    @"{
-                        ""_id"": ""$Id"",
-                        ""Nombre"": ""$Nombre"",
-                        ""Descripcion"": ""$Descripcion"",
-                        ""CategoriaProducto"": ""@CategoriaProducto"",
-                        ""PrecioUnitario"": ""$PrecioUnitario"",
-                        ""PermitirVenta"": ""$PermitirVenta"",
-                    }")
-            });
+        //    x.Sections.Add(new JobSection
+        //    {
+        //        Name = "Producto",
+        //        Sql = "SELECT * FROM Producto",
+        //        Template = JsonConvert.DeserializeObject<ExpandoObject>(
+        //            @"{
+        //                ""_id"": ""$Id"",
+        //                ""Nombre"": ""$Nombre"",
+        //                ""Descripcion"": ""$Descripcion"",
+        //                ""CategoriaProducto"": ""@CategoriaProducto"",
+        //                ""PrecioUnitario"": ""$PrecioUnitario"",
+        //                ""PermitirVenta"": ""$PermitirVenta"",
+        //            }")
+        //    });
 
-            json = JsonConvert.SerializeObject(x, Formatting.Indented);
-            File.WriteAllText(fileOut, json);
-            Environment.Exit(0);
-        }
+        //    json = JsonConvert.SerializeObject(x, Formatting.Indented);
+        //    File.WriteAllText(fileOut, json);
+        //    Environment.Exit(0);
+        //}
 
         /// <summary>
         /// Register available commands with the Service Registry
