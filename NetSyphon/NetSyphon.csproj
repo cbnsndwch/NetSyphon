@@ -91,6 +91,7 @@
     <Compile Include="Models\JobDescription.cs" />
     <Compile Include="Models\JobSection.cs" />
     <Compile Include="Cli\GenerateConfigFileCliArgs.cs" />
+    <Compile Include="Models\JobMode.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Cli\RunJobCliArgs.cs" />
